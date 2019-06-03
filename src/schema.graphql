@@ -1,0 +1,32 @@
+const { gql } = require('apollo-server');
+
+
+const typeDefs = gql`
+  type Query {
+    user(username: String!): [User!]
+    search(query: String!): [User!]
+  }
+  type User {
+    id: ID!
+    name: String!
+    username: String!
+    needs: [Need!]
+  }
+  type Need {
+    id: ID!
+    title: String!
+    categories: [Category!] # todo, make ref
+    remote: Boolean!
+    description: String!
+    startDate: String!
+    endDate: String!
+    weight: Int!
+  }
+  type Category {
+    id: ID!
+    name: String!
+    related: [Category!] #this might not be a string???
+  }
+`;
+
+module.exports = typeDefs;
