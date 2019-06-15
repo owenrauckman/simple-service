@@ -4,16 +4,43 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
   type Query {
     user(username: String!): [User!]
-    search(query: String!): [User!]
+    search(query: String!, type: SearchType): [User!]
   }
   type User {
-    id: ID!
+    _id: ID!
     name: String!
     username: String!
     needs: [Need!]
+    abilities: [Ability!]
+    catalog: [Catalog!]
   }
   type Need {
     id: ID!
+    type: String!
+    title: String!
+    categories: [Category!] # todo, make ref
+    remote: Boolean!
+    description: String!
+    startDate: String!
+    endDate: String!
+    weight: Int!
+  }
+  # TODO, DOUBLE CHECK ABILITIES
+  type Ability {
+    id: ID!
+    type: String!
+    title: String!
+    categories: [Category!] # todo, make ref
+    remote: Boolean!
+    description: String!
+    startDate: String!
+    endDate: String!
+    weight: Int!
+  }
+  #TODO DBL CHECK
+  type Catalog {
+    id: ID!
+    type: String!
     title: String!
     categories: [Category!] # todo, make ref
     remote: Boolean!
@@ -26,6 +53,10 @@ const typeDefs = gql`
     id: ID!
     name: String!
     related: [Category!] #this might not be a string???
+  }
+  enum SearchType{
+    NEED
+    ABILITY
   }
 `;
 
