@@ -4,9 +4,10 @@ const Ability  = require('./models/Ability');
 
 module.exports = {
   Query: {
-    /*
-      Get a user by username
-    */
+    /**
+     * Get a user's profile information and populate refs
+     * @param {string} username - username we are retrieving
+     */
     user: async (_, {username}) => {
       try{
         return await User.find({username})
@@ -24,18 +25,20 @@ module.exports = {
       -
     */
 
-    /*
-      Search for needs
-      todo: make it work both ways
-    */
-    search: async(_, {query, type}) =>{
-
+    /**
+     * Search for Needs or Abilities and optionally by category
+     * First fetch from the Needs/Abilities collections, then return users that match criteria
+     * @param {string} query - user defined query
+     * @param {string} type - an enum of [NEED, ABILITY] defining the offering type
+     * @param {string} category - user can optionally search by category too
+     */
+    search: async(_, {query, type, category}) =>{
       let modelName = (type === 'NEED' ? Need : Ability);
       let pathName = (type === 'NEED' ? 'needs' : 'abilities');
 
       try{
         const offerings = await modelName.aggregate([
-          { $match: { $text: {$search: query } } },
+          { $match: { $text: {$search: `${query} ${category}` } } }, // space delimites query vs cat
           { $project: { score: { $meta: "textScore" } } },
           { $match: { score: { $gt: 0.5 } } } // todo, adjust score
         ]);
