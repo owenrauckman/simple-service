@@ -5,9 +5,14 @@ const User = Schema(
   {
     name: String,
     username: String,
-    needs: Array,
-    abilities: Array,
-    catalog: Array,
+    needs: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Need'
+    }],
+    abilities: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Ability'
+    }],
   },
   {collection: "Users"}
 );

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Need = Schema(
+const Ability = Schema(
   {
     title: String,
     type: String,
@@ -15,7 +15,7 @@ const Need = Schema(
     endDate: String, // todo, could be date
     weight: Number,
   },
-  {collection: "Needs"}
+  {collection: "Abilities"}
 );
 
-module.exports = mongoose.model("Need", Need)
+module.exports = mongoose.model("Ability", Ability)
