@@ -4,7 +4,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
   type Query {
     user(username: String!): [User!]
-    search(query: String!, type: SearchType, category: String): [UserSearchResult!]
+    search(query: String!, type: SearchType, category: String, state: String): [UserSearchResult!]
   }
 
   # this is the same for needs and abilities
@@ -24,6 +24,7 @@ const typeDefs = gql`
     _id: ID!
     name: String!
     username: String!
+    state: String!
   }
 
   type User {
@@ -32,6 +33,7 @@ const typeDefs = gql`
     username: String!
     needs: [Offering!]
     abilities: [Offering!]
+    state: String!
   }
   enum SearchType{
     NEED

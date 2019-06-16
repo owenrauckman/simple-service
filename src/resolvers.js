@@ -32,7 +32,7 @@ module.exports = {
      * @param {string} type - an enum of [NEED, ABILITY] defining the offering type
      * @param {string} category - user can optionally search by category too
      */
-    search: async(_, {query, type, category}) =>{
+    search: async(_, {query, type, category, state = null}) =>{
       let modelName = (type === 'NEED' ? Need : Ability);
       let pathName = (type === 'NEED' ? 'needs' : 'abilities');
 
@@ -45,6 +45,8 @@ module.exports = {
 
         const users = await User.find({
           [pathName]: { $in: offerings.map((offering)=> offering._id) },
+          ... state && { state: state }, // conditionally set
+          // todo: city, zip (close)
         }).populate({
           path: pathName,
           model: modelName,
