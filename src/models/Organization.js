@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const User = Schema(
+const Organization = Schema(
   {
     name: String,
     username: String,
@@ -15,18 +15,6 @@ const User = Schema(
         default: '',
       },
     },
-    needs: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Need'
-    }],
-    abilities: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Ability'
-    }],
-    organizations: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Organization'
-    }],
     reviews: [{
       rating: Number,
       reviewer: {
@@ -36,8 +24,9 @@ const User = Schema(
       description: String,
       date: Date,
     }],
+    membership: Object, // post MVP
   },
-  {collection: "Users"}
+  {collection: "Organizations"}
 );
 
-module.exports = mongoose.model("User", User)
+module.exports = mongoose.model("Organization", Organization)

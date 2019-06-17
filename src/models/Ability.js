@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const Ability = Schema(
   {
     title: String,
-    type: String,
     categories: [{
       type: Schema.Types.ObjectId,
       ref: 'Category'
@@ -14,7 +13,6 @@ const Ability = Schema(
     description: String,
     startDate: Date,
     endDate: Date,
-    weight: Number,
   },
   {collection: "Abilities"}
 );

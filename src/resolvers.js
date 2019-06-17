@@ -1,6 +1,7 @@
 const zipcodes = require('zipcodes');
 
 const User  = require('./models/User');
+const Organization  = require('./models/Organization');
 const Need  = require('./models/Need');
 const Ability  = require('./models/Ability');
 
@@ -15,6 +16,23 @@ module.exports = {
         return await User.find({username})
           .populate({ path: 'needs', model: Need})
           .populate({ path: 'abilities', model: Ability})
+      } catch(e){
+        console.log(e)
+        return {error: e}
+      }
+    },
+
+    /**
+     * Get an organization's profile information
+     * Additionally, query for all users that belong to the org and return them
+     * @param {string} username - username we are retrieving
+     */
+    organization: async (_, {username}) => {
+      try{
+        const organization = await Organization.findOne({username})
+        organization.members = await User.find({organizations: organization._id})
+
+        return [organization];
       } catch(e){
         console.log(e)
         return {error: e}
