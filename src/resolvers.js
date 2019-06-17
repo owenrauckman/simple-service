@@ -40,11 +40,18 @@ module.exports = {
 
       try{
         const offerings = await modelName.aggregate([
-          { $match: { $text: {$search: `${query} ${category}` } } }, // space delimites query vs cat
-          remote ? { $match: { remote: remote } } : null,
+          {
+            $match: {
+              $and: [
+                { $text: { $search: `${query} ${category}` } }, // space delimites query vs cat
+                { searchable: true },
+                { ... remote && { remote: remote } },
+              ]
+            }
+          },
           { $project: { score: { $meta: "textScore" } } },
           { $match: { score: { $gt: 0.5 } } } // todo, adjust score
-        ].filter(Boolean)); // filter falsy items (if zip is null)
+        ]);
 
         return await User.find({
           $and: [
@@ -56,7 +63,7 @@ module.exports = {
                 { ... city && { 'location.city': city } },
               ]
             } : null,
-          ].filter(Boolean)
+          ].filter(Boolean) // filter falsy items (if zip is null)
         }).populate({
           path: pathName,
           model: modelName,

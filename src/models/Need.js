@@ -9,6 +9,7 @@ const Need = Schema(
       type: Schema.Types.ObjectId,
       ref: 'Category'
     }],
+    searchable: Boolean,
     remote: Boolean,
     description: String,
     startDate: String, // todo, could be date

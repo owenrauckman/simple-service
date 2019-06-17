@@ -12,6 +12,7 @@ const typeDefs = gql`
     id: ID!
     title: String!
     categories: [String!]
+    searchable: Boolean!
     remote: Boolean!
     description: String!
     startDate: String!
