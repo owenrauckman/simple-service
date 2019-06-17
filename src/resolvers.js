@@ -26,13 +26,16 @@ module.exports = {
     */
 
     /**
-     * Search for Needs or Abilities and optionally by category
+     * Search for Needs or Abilities and optionally by category, city, state, and zip
      * First fetch from the Needs/Abilities collections, then return users that match criteria
      * @param {string} query - user defined query
      * @param {string} type - an enum of [NEED, ABILITY] defining the offering type
      * @param {string} category - user can optionally search by category too
+     * @param {string} state - state user optionally searches by
+     * @param {string} city - city user optionally searches by
+     * @param {string} zip - zip user optionally searches by
      */
-    search: async(_, {query, type, category, state = null}) =>{
+    search: async(_, {query, type, category, state = null, city = null, zip = null}) =>{
       let modelName = (type === 'NEED' ? Need : Ability);
       let pathName = (type === 'NEED' ? 'needs' : 'abilities');
 
@@ -43,20 +46,26 @@ module.exports = {
           { $match: { score: { $gt: 0.5 } } } // todo, adjust score
         ]);
 
-        const users = await User.find({
+        return await User.find({
           [pathName]: { $in: offerings.map((offering)=> offering._id) },
-          ... state && { state: state }, // conditionally set
-          // todo: city, zip (close)
+          $or: [
+            zip ? { ... zip && { 'location.zip': zip } } : null,
+            {
+              $or: [
+                { ... state && { 'location.state': state }},
+                { ... city && { 'location.city': city } }
+
+              ]
+            }
+          ].filter(Boolean) // filter falsy items (if zip is null)
         }).populate({
           path: pathName,
           model: modelName,
         });
 
-        return users;
-
         }catch(e){
-          console.log(e);
-          return []
+          console.error(e);
+          return [];
         }
 
     }

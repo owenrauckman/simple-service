@@ -5,9 +5,12 @@ const User = Schema(
   {
     name: String,
     username: String,
-    state: {
-      type: String,
-      default: '',
+    location: {
+      type: Object,
+      state: {
+        type: String,
+        default: '',
+      },
     },
     needs: [{
       type: Schema.Types.ObjectId,
