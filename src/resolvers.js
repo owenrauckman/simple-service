@@ -1,3 +1,5 @@
+const zipcodes = require('zipcodes');
+
 const User  = require('./models/User');
 const Need  = require('./models/Need');
 const Ability  = require('./models/Ability');
@@ -34,8 +36,9 @@ module.exports = {
      * @param {string} state - state user optionally searches by
      * @param {string} city - city user optionally searches by
      * @param {string} zip - zip user optionally searches by
+     * @param {string} searchRadius - radius, in miles, a user is searching in
      */
-    search: async(_, {query, type, category, state = null, city = null, zip = null}) =>{
+    search: async(_, {query, type, category, state = null, city = null, zip = null, searchRadius = null}) =>{
       let modelName = (type === 'NEED' ? Need : Ability);
       let pathName = (type === 'NEED' ? 'needs' : 'abilities');
 
@@ -48,15 +51,15 @@ module.exports = {
 
         return await User.find({
           [pathName]: { $in: offerings.map((offering)=> offering._id) },
-          $or: [
-            zip ? { ... zip && { 'location.zip': zip } } : null,
-            {
+          $and: [
+            zip ? { ... zip && { 'location.zip': { $in: zipcodes.radius(zip, searchRadius).map((code)=> parseInt(code, 10)) } } } : null,
+            ( state || city) ? {
               $or: [
                 { ... state && { 'location.state': state }},
                 { ... city && { 'location.city': city } }
 
               ]
-            }
+            } : null,
           ].filter(Boolean) // filter falsy items (if zip is null)
         }).populate({
           path: pathName,

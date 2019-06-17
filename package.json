@@ -15,7 +15,8 @@
     "apollo-server": "2.5",
     "graphql": "^14.0.2",
     "mongoose": "^5.5.12",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "zipcodes": "^8.0.0"
   },
   "devDependencies": {
     "apollo-link": "^1.2.3",
