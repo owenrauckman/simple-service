@@ -45,9 +45,11 @@ module.exports = {
               $and: [
                 { $text: { $search: `${query} ${category}` } }, // space delimites query vs cat
                 { searchable: true },
+                { startDate: { $lte : new Date() } },
+                { endDate: { $gte : new Date() } },
                 { ... remote && { remote: remote } },
               ]
-            }
+            },
           },
           { $project: { score: { $meta: "textScore" } } },
           { $match: { score: { $gt: 0.5 } } } // todo, adjust score

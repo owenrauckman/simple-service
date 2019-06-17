@@ -12,8 +12,8 @@ const Need = Schema(
     searchable: Boolean,
     remote: Boolean,
     description: String,
-    startDate: String, // todo, could be date
-    endDate: String, // todo, could be date
+    startDate: Date,
+    endDate: Date,
     weight: Number,
   },
   {collection: "Needs"}
