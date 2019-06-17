@@ -4,7 +4,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
   type Query {
     user(username: String!): [User!]
-    search(query: String!, type: SearchType, category: String, state: String, city: String, zip: Int, searchRadius: Int): [UserSearchResult!]
+    search(query: String!, type: SearchType, category: String, state: String, city: String, zip: Int, searchRadius: Int, remote: Boolean): [UserSearchResult!]
   }
 
   # this is the same for needs and abilities

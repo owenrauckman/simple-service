@@ -30,47 +30,48 @@ module.exports = {
     /**
      * Search for Needs or Abilities and optionally by category, city, state, and zip
      * First fetch from the Needs/Abilities collections, then return users that match criteria
+     * If remote is passed as true, we ignore the location options in the user query
      * @param {string} query - user defined query
      * @param {string} type - an enum of [NEED, ABILITY] defining the offering type
      * @param {string} category - user can optionally search by category too
      * @param {string} state - state user optionally searches by
      * @param {string} city - city user optionally searches by
-     * @param {string} zip - zip user optionally searches by
-     * @param {string} searchRadius - radius, in miles, a user is searching in
+     * @param {int} zip - zip user optionally searches by
+     * @param {int} searchRadius - radius, in miles, a user is searching in
+     * @param {boolean} remote - lets us know if user is search for a remote worker
      */
-    search: async(_, {query, type, category, state = null, city = null, zip = null, searchRadius = null}) =>{
+    search: async(_, {query, type, category, state = null, city = null, zip = null, searchRadius = null, remote = false}) => {
       let modelName = (type === 'NEED' ? Need : Ability);
       let pathName = (type === 'NEED' ? 'needs' : 'abilities');
 
       try{
         const offerings = await modelName.aggregate([
           { $match: { $text: {$search: `${query} ${category}` } } }, // space delimites query vs cat
+          remote ? { $match: { remote: remote } } : null,
           { $project: { score: { $meta: "textScore" } } },
           { $match: { score: { $gt: 0.5 } } } // todo, adjust score
-        ]);
+        ].filter(Boolean)); // filter falsy items (if zip is null)
 
         return await User.find({
-          [pathName]: { $in: offerings.map((offering)=> offering._id) },
           $and: [
-            zip ? { ... zip && { 'location.zip': { $in: zipcodes.radius(zip, searchRadius).map((code)=> parseInt(code, 10)) } } } : null,
-            ( state || city) ? {
+            { [pathName]: { $in: offerings.map((offering)=> offering._id) } },
+            (zip && !remote) ? { ... zip && { 'location.zip': { $in: zipcodes.radius(zip, searchRadius).map((code)=> parseInt(code, 10)) } } } : null,
+            ( (state || city) && !remote ) ? {
               $or: [
-                { ... state && { 'location.state': state }},
-                { ... city && { 'location.city': city } }
-
+                { ... state && { 'location.state': state } },
+                { ... city && { 'location.city': city } },
               ]
             } : null,
-          ].filter(Boolean) // filter falsy items (if zip is null)
+          ].filter(Boolean)
         }).populate({
           path: pathName,
           model: modelName,
         });
 
-        }catch(e){
-          console.error(e);
-          return [];
-        }
-
+      } catch(e){
+        console.error(e);
+        return [];
+      }
     }
   }
 
