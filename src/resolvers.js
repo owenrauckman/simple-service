@@ -21,12 +21,6 @@ module.exports = {
       }
     },
 
-    /*
-      Routes
-      - search (helper, helpee) --only base profile info returned
-      -
-    */
-
     /**
      * Search for Needs or Abilities and optionally by category, city, state, and zip
      * First fetch from the Needs/Abilities collections, then return users that match criteria
@@ -57,7 +51,7 @@ module.exports = {
             { [pathName]: { $in: offerings.map((offering)=> offering._id) } },
             (zip && !remote) ? { ... zip && { 'location.zip': { $in: zipcodes.radius(zip, searchRadius).map((code)=> parseInt(code, 10)) } } } : null,
             ( (state || city) && !remote ) ? {
-              $or: [
+              $and: [
                 { ... state && { 'location.state': state } },
                 { ... city && { 'location.city': city } },
               ]
