@@ -1,0 +1,8 @@
+const typeDef = `
+  enum SearchType{
+    NEED
+    ABILITY
+  }
+`;
+
+module.exports = {typeDef};

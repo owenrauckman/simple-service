@@ -1,0 +1,30 @@
+const typeDef = `
+  # this is the same for needs and abilities
+  type Offering {
+    id: ID!
+    title: String!
+    categories: [String!]
+    searchable: Boolean!
+    remote: Boolean!
+    description: String!
+    startDate: String!
+    endDate: String!
+  }
+
+  type Location {
+    state: String!
+    city: String!
+    zip: Int!
+    helpRadius: Int!
+  }
+
+  type Review {
+    _id: ID!
+    rating: Int!
+    reviewer: String!
+    description: String!
+    date: String!
+  }
+`;
+
+module.exports = {typeDef};

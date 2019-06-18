@@ -1,0 +1,16 @@
+const typeDef = `
+  type Organization {
+    _id: ID!
+    name: String!
+    username: String!
+    avatar: String!
+    about: String!
+    industries: [String!]
+    location: Location!
+    members: [UserSearchResult!]
+    reviews: [Review!]
+    # membership: Membership! <-- post MVP
+  }
+`;
+
+module.exports = {typeDef};

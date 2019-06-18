@@ -1,0 +1,25 @@
+const typeDef = `
+  type User {
+    _id: ID!
+    name: String!
+    username: String!
+    avatar: String!
+    about: String!
+    industries: [String!]
+    organizations: [String!]
+    reviews: [Review!]
+    needs: [Offering!]
+    abilities: [Offering!]
+    location: Location!
+  }
+
+  # similar to User, but without extra data, revisit later
+  type UserSearchResult {
+    _id: ID!
+    name: String!
+    username: String!
+    location: Location!
+  }
+`;
+
+module.exports = {typeDef};

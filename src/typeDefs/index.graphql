@@ -1,0 +1,8 @@
+const { typeDef: User } = require('./user.graphql');
+const { typeDef: Organization } = require('./organization.graphql')
+const { typeDef: Reference } = require('./reference.graphql')
+const { typeDef: Enum } = require('./enum.graphql')
+const { typeDef: Query } = require('./query.graphql')
+
+
+module.exports = [User, Organization, Reference, Enum, Query];
