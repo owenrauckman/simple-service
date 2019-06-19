@@ -3,6 +3,8 @@ const typeDef = `
     _id: ID!
     name: String!
     username: String!
+    password: String!
+    email: String!
     avatar: String!
     about: String!
     industries: [String!]

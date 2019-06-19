@@ -1,4 +1,4 @@
-const { user }  = require('./user');
+const { user, createUser }  = require('./user');
 const { search }  = require('./search');
 const { organization }  = require('./organization');
 
@@ -8,7 +8,7 @@ module.exports = {
     search,
     organization,
   },
-  // Mutation: {
-  //   todo: fill with exports from resolver files
-  // }
+  Mutation: {
+    createUser,
+  }
 }

@@ -17,4 +17,28 @@ const user = async (_, {username}) => {
   }
 }
 
-module.exports = { user };
+/**
+ * Get a user's profile information and populate refs
+ * @param {object} input - user data following the the UserInput typeDef 
+ */
+const createUser = async(_, {input}) =>{
+  try{
+    const userExists = await User.countDocuments({
+      $or: [
+        { username: input.username },
+        { email: input.emailAddress },
+      ]
+    });
+
+    if(userExists > 0) return { success: false, message: 'User Exists' }
+
+    await User.create(input);
+    return { success: true, message: `user ${input.username} successfully created` }
+  } catch(e){
+    console.log(e);
+    return { success: false, message: 'Something went wrong' }
+  }
+}
+
+
+module.exports = { user, createUser };
