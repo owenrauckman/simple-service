@@ -5,13 +5,18 @@ const bcrypt = require('bcrypt');
 const User = require('../mongoose/User');
 
 /**
- * Check if a username, and valid password exists and return a signed JWT token
- * @param {object} username - user object that contains username and password for login check
+ * Check if a username/email, and valid password exists and return a signed JWT token
+ * This should allow users to login using either their username OR email
+ * @param {object} input - user object containing username and password for login check
  */
 const login = async (_, {input}) => {
   try{
-    const user = await User.findOne({ username: input.username }) // todo: email OR username (security chck though)
-    if(!user) return { success: false, message: 'invalid username' }
+    const user = await User.findOne({
+      ... input.username && { username: input.username },
+      ... input.email && { email: input.email }
+    })
+
+    if(!user) return { success: false, message: 'invalid username or email' }
 
     const validPassword = await bcrypt.compare(input.password, user.password);
 

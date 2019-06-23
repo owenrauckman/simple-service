@@ -1,0 +1,8 @@
+const typeDef = `
+  type MutationResponse {
+    success: Boolean!
+    message: String
+  }
+`;
+
+module.exports = {typeDef};

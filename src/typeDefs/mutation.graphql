@@ -1,0 +1,8 @@
+const typeDef = `
+  type Mutation {
+    createUser(input: UserCreateInput!): MutationResponse!
+    updateUser(input: UserUpdateInput!): MutationResponse!
+  }
+`;
+
+module.exports = {typeDef};

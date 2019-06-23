@@ -20,7 +20,6 @@ module.exports = (app) =>{
     passportAuthenticate(req, res, next);
   })
 
-  /// merge express and apollo
   server.applyMiddleware({ app });
 
   app.listen({ port: 4000 }, () =>

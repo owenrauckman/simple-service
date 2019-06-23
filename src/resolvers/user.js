@@ -29,7 +29,7 @@ const createUser = async(_, {input}) =>{
     const userExists = await User.countDocuments({
       $or: [
         { username: input.username },
-        { email: input.emailAddress },
+        { email: input.email },
       ]
     });
 
@@ -57,15 +57,24 @@ const updateUser = async(_, {input}, context) =>{
     throw new AuthenticationError('Unauthorized')
   }
   try{
-    if(input.password){
-      input.password = await hashPassword(input.password);
-    }
+    // Don't allow empty username, email, or password
+    if(input.hasOwnProperty('username') && input.username === '') return { success: false, message: `Username cannot be empty` };
+    if(input.hasOwnProperty('email') && input.email === '') return { success: false, message: `Email cannot be empty` };
+    if(input.hasOwnProperty('password') && input.password === '') return { success: false, message: `Password cannot be empty` };
+
+    // If password is being updated, hash it before update
+    if(input.password) input.password = await hashPassword(input.password);
+
+    /*
+      Don't allow users to create accounts with emails/usernames that are already registered
+    */
     if(input.email && input.email !== context.user.email){
       const userExists = await User.countDocuments({ email: input.email });
       if(userExists){
         return { success: false, message: `There is already an account registered with: ${input.email}` }
       }
     }
+
     if(input.username && input.username !== context.user.username){
       const userExists = await User.countDocuments({ username: input.username });
       if(userExists){

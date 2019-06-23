@@ -20,11 +20,21 @@ const strategy = new Strategy(strategyParams, async (payload, done) => {
   }
 })
 
+/**
+ * Instantiate passport using the strategy defined above. This middleware gets
+ * applied in apollo.js and ensures that we can do auth on certain graphQL queries
+ */
 const passportInit = () =>{
   passport.use(strategy)
   passport.initialize()
 }
 
+/**
+ * Actual authentication middleware that gets fired on each route under /graphql
+ * @param {object} req - express req object
+ * @param {object} res - express res object
+ * @param {object} next - express next object
+ */
 const passportAuthenticate = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (user) {
@@ -35,6 +45,10 @@ const passportAuthenticate = (req, res, next) => {
   })(req, res, next)
 }
 
+/**
+ * Use bcrypt to has a password with 10 salt rounds before storing in our DB
+ * @param {string} password - Password we are hasing
+ */
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);

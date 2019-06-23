@@ -1,26 +1,57 @@
 const typeDef = `
+  # --- Default User ---
   type User {
     _id: ID!
     name: String!
     username: String!
     password: String!
     email: String!
-    avatar: String!
-    about: String!
-    industries: [String!]
-    organizations: [String!]
-    reviews: [Review!]
-    needs: [Offering!]
-    abilities: [Offering!]
+    avatar: String
+    about: String
+    industries: [String]
+    organizations: [String]
+    reviews: [Review]
+    needs: [Offering]
+    abilities: [Offering]
     location: Location!
   }
 
-  # similar to User, but without extra data, revisit later
-  type UserSearchResult {
-    _id: ID!
+  # --- User Input Types ---
+  input UserLoginInput {
+    username: String
+    email: String
+    password: String!
+  }
+
+  input UserUpdateInput {
+    _id: ID
+    name: String
+    username: String
+    password: String
+    email: String
+    avatar: String
+    about: String
+    industries: [String]
+    organizations: [String]
+    reviews: [ReviewInput]
+    needs: [OfferingInput]
+    abilities: [OfferingInput]
+    location: LocationInput
+  }
+
+  input UserCreateInput {
     name: String!
     username: String!
-    location: Location!
+    password: String!
+    email: String!
+    avatar: String
+    about: String
+    industries: [String]
+    organizations: [String]
+    reviews: [ReviewInput]
+    needs: [OfferingInput]
+    abilities: [OfferingInput]
+    location: LocationInput
   }
 `;
 

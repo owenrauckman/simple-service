@@ -1,5 +1,6 @@
 const typeDef = `
-  # this is the same for needs and abilities
+  # --- Offering ---
+  # Needs/Abilities have the same schema called 'Offering'
   type Offering {
     id: ID!
     title: String!
@@ -11,19 +12,36 @@ const typeDef = `
     endDate: String!
   }
 
+  input OfferingInput {
+    id: ID!
+  }
+
+  # --- Location ---
   type Location {
     state: String!
     city: String!
     zip: Int!
-    helpRadius: Int!
+    helpRadius: Int
   }
 
+  input LocationInput {
+    state: String!
+    city: String!
+    zip: Int!
+    helpRadius: Int
+  }
+
+  # --- Review ---
   type Review {
     _id: ID!
     rating: Int!
     reviewer: String!
     description: String!
     date: String!
+  }
+
+  input ReviewInput {
+    _id: ID!
   }
 `;
 

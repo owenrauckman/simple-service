@@ -6,7 +6,7 @@ const { organization }  = require('./organization');
 module.exports = {
   Query: {
     getUser,
-    login, 
+    login,
     search,
     organization,
   },
