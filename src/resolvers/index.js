@@ -1,14 +1,17 @@
-const { user, createUser }  = require('./user');
+const { getUser, createUser, updateUser}  = require('./user');
+const { login }  = require('./auth');
 const { search }  = require('./search');
 const { organization }  = require('./organization');
 
 module.exports = {
   Query: {
-    user,
+    getUser,
+    login, 
     search,
     organization,
   },
   Mutation: {
     createUser,
+    updateUser,
   }
 }

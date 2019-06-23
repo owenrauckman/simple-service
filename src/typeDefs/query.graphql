@@ -1,20 +1,31 @@
 const typeDef = `
   type Query {
-    user(username: String!): [User!]
+    getUser(username: String!): [User!]
+    login(input: UserInput!): MutationResponse
     organization(username: String!): [Organization!]
     search(query: String!, type: SearchType, category: String, state: String, city: String, zip: Int, searchRadius: Int, remote: Boolean): [UserSearchResult!]
   }
 
+  #todo, can have ANYTHING since we now have update
   input UserInput{
     username: String!
     email: String!
     name: String!
+    password: String! #todo, should this be here?
+  }
+
+  input UserUpdate{
+    username: String!
+    email: String
+    name: String
+    password: String #todo, should this be here?
   }
 
   # todo, move this into the right spot
   type Mutation {
     # if false, booking trips failed -- check errors
     createUser(input: UserInput!): MutationResponse!
+    updateUser(input: UserUpdate!): MutationResponse!
   }
 
   # -- RESPONSES --- #

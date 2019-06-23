@@ -1,17 +1,9 @@
-const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./typeDefs/index.graphql');
-const resolvers = require('./resolvers');
+const express = require('express');
+const { passportInit } = require('./lib/passport');
 const mongo = require('./lib/mongo');
+const apollo = require('./lib/apollo');
 
+const app = express();
+passportInit();
 mongo();
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true,
-  playground: true,
-});
-
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+apollo(app);
