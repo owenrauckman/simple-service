@@ -25,7 +25,6 @@ const getUser = async (_, {username}) => {
  */
 const createUser = async(_, {input}) =>{
   try{
-    // todo: notify user which of these already exists
     const userExists = await User.countDocuments({
       $or: [
         { username: input.username },
@@ -33,7 +32,7 @@ const createUser = async(_, {input}) =>{
       ]
     });
 
-    if(userExists > 0) return { success: false, message: 'User Exists' }
+    if(userExists > 0) return { success: false, message: 'User with that username or email already Exists' }
 
     input.password = await hashPassword(input.password);
     await User.create(input);
@@ -81,14 +80,32 @@ const updateUser = async(_, {input}, context) =>{
         return { success: false, message: `There is a user with the username: ${input.username }. Please choose a different one.` }
       }
     }
-    await User.updateOne({ username: context.user.username }, input);
 
+    await User.updateOne({ _id: context.user._id }, input);
     return { success: true, message: `user ${input.username} successfully updated` }
+
   } catch(e){
     console.log(e);
     return { success: false, message: 'Something went wrong' }
   }
 }
 
+/**
+ * Deletes an authenticated user
+ * @param {object} input - user data following the the UserInput typeDef
+ */
+const deleteUser = async(_, __, context) =>{
+  if(!context.user){
+    throw new AuthenticationError('Unauthorized')
+  }
+  try{
+    await User.deleteOne({ _id: context.user._id });
+    return { success: true, message: `user ${context.user.username} successfully deleted` }
+  } catch(e){
+    console.log(e);
+    return { success: false, message: 'Something went wrong while deleting your account.' }
+  }
+}
 
-module.exports = { getUser, createUser, updateUser };
+
+module.exports = { getUser, createUser, updateUser, deleteUser };

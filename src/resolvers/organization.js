@@ -6,7 +6,7 @@ const Organization = require('../mongoose/Organization');
  * Additionally, query for all users that belong to the org and return them
  * @param {string} username - username we are retrieving
  */
-const organization = async (_, {username}) => {
+const getOrganization = async (_, {username}) => {
   try{
     const organization = await Organization.findOne({username})
     organization.members = await User.find({organizations: organization._id})
@@ -18,4 +18,4 @@ const organization = async (_, {username}) => {
   }
 }
 
-module.exports = { organization }
+module.exports = { getOrganization }

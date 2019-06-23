@@ -1,6 +1,7 @@
 const typeDef = `
   type Query {
     getUser(username: String!): [User!]
+    deleteUser: MutationResponse!
     getOrganization(username: String!): [Organization!]
     login(input: UserLoginInput!): MutationResponse!
     search(query: String!, type: SearchType, category: String, state: String, city: String, zip: Int, searchRadius: Int, remote: Boolean): [User!]
